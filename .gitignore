@@ -1,4 +1,6 @@
-log/
-install/
+log/*
+!log/.gitkeep
+install/*
+!install/.gitkeep
 build/*
 !build/.gitkeep
