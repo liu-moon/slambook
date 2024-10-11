@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ROS: Launch my file",
+            "request": "launch",
+            "target": "${workspaceFolder}/install/",
+            "launch": ["rviz", "gz", "gzserver", "gzclient"],
+            "type": "ros"
+        },
+
+        {
+            "name": "C++ Debugger",
+            "request": "launch",
+            "type": "cppdbg",
+            "cwd": "/",
+            "program": "${workspaceFolder}/install/ch2/lib/ch2/helloSLAM"
+        }
+    ]
+}
