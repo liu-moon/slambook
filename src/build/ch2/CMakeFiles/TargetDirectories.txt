@@ -1,0 +1,10 @@
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/uninstall.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/ch2_uninstall.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/helloSLAM.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/test.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/edit_cache.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/rebuild_cache.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/list_install_components.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/install.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/install/local.dir
+/home/liuiu/桌面/slambook/src/build/ch2/CMakeFiles/install/strip.dir
