@@ -1,0 +1,16 @@
+/home/liuiu/桌面/slambook/install/ch1/share/ament_index/resource_index/package_run_dependencies/ch1
+/home/liuiu/桌面/slambook/install/ch1/share/ament_index/resource_index/parent_prefix_path/ch1
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/ament_prefix_path.sh
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/ament_prefix_path.dsv
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/path.sh
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/path.dsv
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.bash
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.sh
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.zsh
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.dsv
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/package.dsv
+/home/liuiu/桌面/slambook/install/ch1/share/ament_index/resource_index/packages/ch1
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/cmake/ch1Config.cmake
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/cmake/ch1Config-version.cmake
+/home/liuiu/桌面/slambook/install/ch1/share/ch1/package.xml
+/home/liuiu/桌面/slambook/install/ch1/lib/ch1/wang2_node

@@ -1,0 +1,62 @@
+[0.008s] Invoking command in '/home/liuiu/桌面/slambook/build/ch1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/liuiu/桌面/slambook/src/ch1 -DCMAKE_INSTALL_PREFIX=/home/liuiu/桌面/slambook/install/ch1
+[0.071s] -- The C compiler identification is GNU 13.2.0
+[0.134s] -- The CXX compiler identification is GNU 13.2.0
+[0.149s] -- Detecting C compiler ABI info
+[0.240s] -- Detecting C compiler ABI info - done
+[0.254s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.254s] -- Detecting C compile features
+[0.254s] -- Detecting C compile features - done
+[0.264s] -- Detecting CXX compiler ABI info
+[0.376s] -- Detecting CXX compiler ABI info - done
+[0.388s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.388s] -- Detecting CXX compile features
+[0.389s] -- Detecting CXX compile features - done
+[0.391s] -- Found ament_cmake: 2.5.2 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.525s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.617s] -- Found rclcpp: 28.1.5 (/opt/ros/jazzy/share/rclcpp/cmake)
+[0.652s] -- Found rosidl_generator_c: 4.6.4 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.664s] -- Found rosidl_generator_cpp: 4.6.4 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.678s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.695s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.776s] -- Found rmw_implementation_cmake: 7.3.1 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[0.778s] -- Found rmw_fastrtps_cpp: 8.4.1 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[0.857s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[0.881s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[0.902s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.983s] -- Found ament_lint_auto: 0.17.1 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[1.081s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.081s] -- Configured cppcheck include dirs: 
+[1.081s] -- Configured cppcheck exclude dirs and/or files: 
+[1.082s] -- Added test 'lint_cmake' to check CMake code style
+[1.083s] -- Added test 'uncrustify' to check C / C++ code style
+[1.083s] -- Configured uncrustify additional arguments: 
+[1.083s] -- Added test 'xmllint' to check XML markup files
+[1.085s] -- Configuring done (1.1s)
+[1.093s] -- Generating done (0.0s)
+[1.095s] -- Build files have been written to: /home/liuiu/桌面/slambook/build/ch1
+[1.104s] Invoked command in '/home/liuiu/桌面/slambook/build/ch1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/liuiu/桌面/slambook/src/ch1 -DCMAKE_INSTALL_PREFIX=/home/liuiu/桌面/slambook/install/ch1
+[1.104s] Invoking command in '/home/liuiu/桌面/slambook/build/ch1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/liuiu/桌面/slambook/build/ch1 -- -j20 -l20
+[1.147s] [ 50%] [32mBuilding CXX object CMakeFiles/wang2_node.dir/src/wang2.cpp.o[0m
+[4.351s] [100%] [32m[1mLinking CXX executable wang2_node[0m
+[4.470s] [100%] Built target wang2_node
+[4.481s] Invoked command in '/home/liuiu/桌面/slambook/build/ch1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/liuiu/桌面/slambook/build/ch1 -- -j20 -l20
+[4.514s] Invoking command in '/home/liuiu/桌面/slambook/build/ch1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/liuiu/桌面/slambook/build/ch1
+[4.522s] -- Install configuration: ""
+[4.522s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ament_index/resource_index/package_run_dependencies/ch1
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ament_index/resource_index/parent_prefix_path/ch1
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/ament_prefix_path.sh
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/ament_prefix_path.dsv
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/path.sh
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/environment/path.dsv
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.bash
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.sh
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.zsh
+[4.523s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/local_setup.dsv
+[4.524s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/package.dsv
+[4.524s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ament_index/resource_index/packages/ch1
+[4.524s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/cmake/ch1Config.cmake
+[4.524s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/cmake/ch1Config-version.cmake
+[4.524s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/share/ch1/package.xml
+[4.524s] -- Installing: /home/liuiu/桌面/slambook/install/ch1/lib/ch1/wang2_node
+[4.525s] -- Set non-toolchain portion of runtime path of "/home/liuiu/桌面/slambook/install/ch1/lib/ch1/wang2_node" to ""
+[4.527s] Invoked command in '/home/liuiu/桌面/slambook/build/ch1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/liuiu/桌面/slambook/build/ch1
