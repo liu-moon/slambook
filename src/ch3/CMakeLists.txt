@@ -32,6 +32,9 @@ ament_target_dependencies(eigen_node rclcpp Eigen3)
 add_executable(useGeometry src/useGeometry.cpp)
 ament_target_dependencies(useGeometry rclcpp Eigen3)
 
+add_executable(coordinateTransform src/coordinateTransform.cpp)
+ament_target_dependencies(coordinateTransform rclcpp Eigen3)
+
 install(TARGETS
-  eigen_node useGeometry
+  eigen_node useGeometry coordinateTransform
   DESTINATION lib/${PROJECT_NAME})
