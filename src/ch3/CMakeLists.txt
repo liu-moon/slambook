@@ -8,6 +8,9 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -22,3 +25,11 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+
+add_executable(eigen_node src/eigenMatrix.cpp)
+# target_link_libraries(eigen_node Eigen3::Eigen)
+ament_target_dependencies(eigen_node rclcpp Eigen3)
+
+install(TARGETS
+  eigen_node
+  DESTINATION lib/${PROJECT_NAME})
