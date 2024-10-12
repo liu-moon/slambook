@@ -27,9 +27,11 @@ endif()
 ament_package()
 
 add_executable(eigen_node src/eigenMatrix.cpp)
-# target_link_libraries(eigen_node Eigen3::Eigen)
 ament_target_dependencies(eigen_node rclcpp Eigen3)
 
+add_executable(useGeometry src/useGeometry.cpp)
+ament_target_dependencies(useGeometry rclcpp Eigen3)
+
 install(TARGETS
-  eigen_node
+  eigen_node useGeometry
   DESTINATION lib/${PROJECT_NAME})
