@@ -9,6 +9,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 
 include_directories(${EIGEN3_INCLUDE_DIR})
 
@@ -35,6 +37,13 @@ ament_target_dependencies(useGeometry rclcpp Eigen3)
 add_executable(coordinateTransform src/coordinateTransform.cpp)
 ament_target_dependencies(coordinateTransform rclcpp Eigen3)
 
+add_executable(plotTrajectory src/plotTrajectory.cpp)
+ament_target_dependencies(plotTrajectory rclcpp Eigen3 nav_msgs)
+
+add_executable(plotTrajectory_arrow src/plotTrajectory_arrow.cpp)
+ament_target_dependencies(plotTrajectory_arrow rclcpp Eigen3 nav_msgs visualization_msgs)
+
+
 install(TARGETS
-  eigen_node useGeometry coordinateTransform
+  eigen_node useGeometry coordinateTransform plotTrajectory plotTrajectory_arrow
   DESTINATION lib/${PROJECT_NAME})
