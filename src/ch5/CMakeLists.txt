@@ -8,6 +8,11 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(cv_bridge REQUIRED)
+
+# 包含目录
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -22,3 +27,13 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+
+add_executable(imageBasics src/imageBasics.cpp)
+ament_target_dependencies(imageBasics rclcpp OpenCV cv_bridge)
+
+# target_link_libraries(imageBasics ${OpenCV_LIBRARIES})
+
+install(TARGETS
+  imageBasics
+  DESTINATION lib/${PROJECT_NAME}
+)
