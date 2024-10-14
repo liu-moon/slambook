@@ -19,19 +19,19 @@ class SophusExampleNode : public rclcpp::Node {
 public:
     SophusExampleNode() : Node("sophus_example_node") {
 
-        // 创建发布器，发布轨迹信息
-        path_publisher_ = this->create_publisher<nav_msgs::msg::Path>("robot_path", 10);
-
+        // 创建发布器，分别发布groundtruth和estimated轨迹信息
+        groundtruth_publisher_ = this->create_publisher<nav_msgs::msg::Path>("groundtruth_path", 10);
+        estimated_publisher_ = this->create_publisher<nav_msgs::msg::Path>("estimated_path", 10);
 
         cout << "*******************************" << endl;
-        // 读取轨迹文件
+        // 读取groundtruth轨迹文件
         vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> groundtruth = ReadTrajectory(groundtruth_file);
         if (groundtruth.empty()) {
             RCLCPP_ERROR(this->get_logger(), "groundtruth_file file is empty or cannot be found.");
             return;
         }
 
-        // 读取轨迹文件
+        // 读取estimated轨迹文件
         vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> estimated = ReadTrajectory(estimated_file);
         if (estimated.empty()) {
             RCLCPP_ERROR(this->get_logger(), "estimated_file file is empty or cannot be found.");
@@ -49,13 +49,14 @@ public:
         rmse = sqrt(rmse);
         cout << "RMSE = " << rmse << endl;
 
-        // 发布轨迹
-        PublishPath(groundtruth);
-        PublishPath(estimated);
+        // 分别发布groundtruth和estimated轨迹
+        PublishPath(groundtruth, groundtruth_publisher_);
+        PublishPath(estimated, estimated_publisher_);
     }
     double rmse;
 private:
-    rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_publisher_;
+    rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr groundtruth_publisher_;
+    rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr estimated_publisher_;
 
     vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> ReadTrajectory(const string &file_path) {
         vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> poses;
@@ -75,7 +76,7 @@ private:
         return poses;
     }
 
-    void PublishPath(const vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> &poses) {
+    void PublishPath(const vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> &poses, rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisher) {
         nav_msgs::msg::Path path_msg;
         path_msg.header.stamp = this->get_clock()->now();
         path_msg.header.frame_id = "map";  // 假设我们在“map”坐标系中
@@ -101,9 +102,10 @@ private:
         }
 
         // 发布路径
-        path_publisher_->publish(path_msg);
+        publisher->publish(path_msg);
     }
 };
+
 
 int main(int argc, char **argv) {
     rclcpp::init(argc, argv);
