@@ -10,9 +10,12 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(cv_bridge REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 # 包含目录
 include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -34,9 +37,12 @@ ament_target_dependencies(imageBasics rclcpp OpenCV cv_bridge)
 add_executable(undistortImage src/undistortImage.cpp)
 ament_target_dependencies(undistortImage rclcpp OpenCV cv_bridge)
 
-# target_link_libraries(imageBasics ${OpenCV_LIBRARIES})
+
+add_executable(stereoVision src/stereoVision.cpp)
+ament_target_dependencies(stereoVision rclcpp OpenCV cv_bridge Eigen3 sensor_msgs)
+
 
 install(TARGETS
-  imageBasics undistortImage
+  imageBasics undistortImage stereoVision
   DESTINATION lib/${PROJECT_NAME}
 )

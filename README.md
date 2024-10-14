@@ -10,7 +10,7 @@ ros2 pkg create ch --build-type ament_cmake --dependencies rclcpp
 ## 基本模板
 
 ``` c++
-#include "rclcpp/rclcpp.hpp"
+#include <rclcpp/rclcpp.hpp>
 
 class MyNode : public rclcpp::Node
 {
