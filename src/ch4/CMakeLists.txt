@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Sophus REQUIRED)
+find_package(nav_msgs REQUIRED)
 set(Sophus_LIBRARIES libSophus.so)
 
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -35,13 +36,18 @@ endif()
 ament_package()
 
 add_executable(useSophus src/useSophus.cpp)
-
 ament_target_dependencies(useSophus rclcpp Eigen3)
+
 include_directories(/usr/local/include/sophus)
+
+
+
+add_executable(trajectoryError src/trajectoryError.cpp)
+ament_target_dependencies(trajectoryError rclcpp Eigen3 nav_msgs)
 
 # 链接库文件
 # target_link_libraries(useSophus ${Sophus_LIBRARIES})
 
 install(TARGETS
-  useSophus
+  useSophus trajectoryError
   DESTINATION lib/${PROJECT_NAME})
