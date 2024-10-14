@@ -31,9 +31,12 @@ ament_package()
 add_executable(imageBasics src/imageBasics.cpp)
 ament_target_dependencies(imageBasics rclcpp OpenCV cv_bridge)
 
+add_executable(undistortImage src/undistortImage.cpp)
+ament_target_dependencies(undistortImage rclcpp OpenCV cv_bridge)
+
 # target_link_libraries(imageBasics ${OpenCV_LIBRARIES})
 
 install(TARGETS
-  imageBasics
+  imageBasics undistortImage
   DESTINATION lib/${PROJECT_NAME}
 )
