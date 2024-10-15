@@ -36,3 +36,12 @@ int main(int argc, char *argv[])
 ros2 run rviz2 rviz2
 ```
 
+## 安装ceres
+
+### 安装依赖库
+
+``` shell
+sudo apt update
+sudo apt install cmake libgoogle-glog-dev libgflags-dev libeigen3-dev libsuitesparse-dev libabsl-dev
+
+```
