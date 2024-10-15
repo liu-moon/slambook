@@ -44,10 +44,7 @@ ament_target_dependencies(stereoVision rclcpp OpenCV cv_bridge Eigen3 sensor_msg
 add_executable(jointMap src/jointMap.cpp)
 ament_target_dependencies(jointMap rclcpp OpenCV cv_bridge Eigen3 sensor_msgs)
 
-add_executable(color src/color.cpp)
-ament_target_dependencies(color rclcpp OpenCV cv_bridge Eigen3 sensor_msgs)
-
 install(TARGETS
-  imageBasics undistortImage stereoVision jointMap color
+  imageBasics undistortImage stereoVision jointMap
   DESTINATION lib/${PROJECT_NAME}
 )
