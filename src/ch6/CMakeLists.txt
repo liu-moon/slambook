@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
 project(ch6)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -12,6 +16,21 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(glog REQUIRED)  # 添加 glog 查找
 find_package(Ceres REQUIRED)  # 使用 find_package 查找 Ceres
+find_package(std_msgs REQUIRED)
+find_package(g2o REQUIRED)
+find_package(fmt REQUIRED)
+
+if (g2o_FOUND)
+  message(STATUS "g2o found!")
+else()
+  message(FATAL_ERROR "g2o not found!")
+endif()
+
+find_package(g2o REQUIRED)
+
+message(STATUS "g2o include dirs: ${g2o_INCLUDE_DIRS}")
+message(STATUS "g2o libraries: ${g2o_LIBRARIES}")
+
 
 # 手动设置Ceres头文件和库路径
 include_directories(/usr/local/include/ceres)
@@ -46,7 +65,10 @@ ament_target_dependencies(ceresCurveFitting rclcpp Eigen3 OpenCV)
 # 链接Ceres库
 target_link_libraries(ceresCurveFitting /usr/local/lib/libceres.so glog::glog)
 
+
 install(TARGETS
   gaussNewton ceresCurveFitting
   DESTINATION lib/${PROJECT_NAME}
 )
+
+

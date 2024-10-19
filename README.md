@@ -4,7 +4,26 @@
 
 ``` shell
 cd slambook/src
-ros2 pkg create ch --build-type ament_cmake --dependencies rclcpp
+ros2 pkg create chx --build-type ament_cmake --dependencies rclcpp
+```
+
+## 编译节点
+
+``` shell
+cd slambook
+colcon build
+```
+
+## source环境
+
+``` shell
+source install/setup.bash
+```
+
+## 运行节点
+
+``` shell
+ros2 run chx xxx
 ```
 
 ## 基本模板
