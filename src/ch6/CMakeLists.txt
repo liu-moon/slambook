@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -17,19 +18,7 @@ find_package(OpenCV REQUIRED)
 find_package(glog REQUIRED)  # 添加 glog 查找
 find_package(Ceres REQUIRED)  # 使用 find_package 查找 Ceres
 find_package(std_msgs REQUIRED)
-find_package(g2o REQUIRED)
 find_package(fmt REQUIRED)
-
-if (g2o_FOUND)
-  message(STATUS "g2o found!")
-else()
-  message(FATAL_ERROR "g2o not found!")
-endif()
-
-find_package(g2o REQUIRED)
-
-message(STATUS "g2o include dirs: ${g2o_INCLUDE_DIRS}")
-message(STATUS "g2o libraries: ${g2o_LIBRARIES}")
 
 
 # 手动设置Ceres头文件和库路径
@@ -38,7 +27,23 @@ link_directories(/usr/local/lib)
 
 include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(${OpenCV_INCLUDE_DIRS})
-# include_directories(${CERES_INCLUDE_DIRS})
+
+# 引入 FetchContent 模块
+# include(FetchContent)
+
+# # 使用 FetchContent_Declare 来获取 g2o 的源码
+# FetchContent_Declare(
+#   g2o
+#   GIT_REPOSITORY https://github.com/RainerKuemmerle/g2o.git
+#   GIT_TAG        20200410_git
+# )
+# FetchContent_MakeAvailable(g2o)
+
+set(g2o_path  ${PROJECT_SOURCE_DIR}/../../3rdparty/g2o)
+message(WARNING "CMAKE_SOURCE_DIR: ${g2o_path}")
+
+
+include_directories(${g2o_path}/include)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -62,12 +67,18 @@ ament_target_dependencies(gaussNewton rclcpp Eigen3 OpenCV)
 add_executable(ceresCurveFitting src/ceresCurveFitting.cpp)
 ament_target_dependencies(ceresCurveFitting rclcpp Eigen3 OpenCV)
 
+add_executable(g2oCurveFitting src/g2oCurveFitting.cpp)
+ament_target_dependencies(g2oCurveFitting rclcpp Eigen3 OpenCV)
+
 # 链接Ceres库
 target_link_libraries(ceresCurveFitting /usr/local/lib/libceres.so glog::glog)
-
+# 链接OpenCV库和 g2o 库
+target_link_libraries(g2oCurveFitting ${OpenCV_LIBS} 
+    ${g2o_path}/lib/libg2o_core.so 
+    ${g2o_path}/lib/libg2o_stuff.so)
 
 install(TARGETS
-  gaussNewton ceresCurveFitting
+  gaussNewton ceresCurveFitting g2oCurveFitting
   DESTINATION lib/${PROJECT_NAME}
 )
 
