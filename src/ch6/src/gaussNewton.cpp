@@ -21,6 +21,10 @@ public:
     cv::RNG rng;                                 // OpenCV随机数产生器
 
     vector<double> x_data, y_data;      // 数据
+
+    // 循环生成数据
+    // x_data为x轴
+    // y_data为y轴（加了高斯白噪声）
     for (int i = 0; i < N; i++) {
         double x = i / 100.0;
         x_data.push_back(x);
@@ -32,16 +36,22 @@ public:
     double cost = 0, lastCost = 0;  // 本次迭代的cost和上一次迭代的cost
 
     chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
+    
+    // 迭代求解
     for (int iter = 0; iter < iterations; iter++) {
 
         Matrix3d H = Matrix3d::Zero();             // Hessian = J^T W^{-1} J in Gauss-Newton
         Vector3d b = Vector3d::Zero();             // bias
         cost = 0;
 
+        // 遍历所有数据点
         for (int i = 0; i < N; i++) {
         double xi = x_data[i], yi = y_data[i];  // 第i个数据点
+        
+        // 计算error = 实际值 - 估计值
         double error = yi - exp(ae * xi * xi + be * xi + ce);
-        Vector3d J; // 雅可比矩阵
+
+        Vector3d J; // 雅可比
         J[0] = -xi * xi * exp(ae * xi * xi + be * xi + ce);  // de/da
         J[1] = -xi * exp(ae * xi * xi + be * xi + ce);  // de/db
         J[2] = -exp(ae * xi * xi + be * xi + ce);  // de/dc
