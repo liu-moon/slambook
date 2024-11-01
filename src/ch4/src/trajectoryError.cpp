@@ -52,6 +52,10 @@ public:
         // 分别发布groundtruth和estimated轨迹
         PublishPath(groundtruth, groundtruth_publisher_);
         PublishPath(estimated, estimated_publisher_);
+
+        RCLCPP_INFO(this->get_logger(), "Publishing groundtruth path with %zu poses", groundtruth.size());
+        RCLCPP_INFO(this->get_logger(), "Publishing estimated path with %zu poses", estimated.size());
+
     }
     double rmse;
 private:

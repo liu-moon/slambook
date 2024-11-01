@@ -63,3 +63,19 @@ cd slambook
 rviz2 -d src/ch3/rviz/plotTrajectory_arrow.rviz
 ros2 run ch3 plotTrajectory_arrow
 ```
+
+## 第4讲 李群和李代数
+
+### useSophus.cpp
+
+useSophus.cpp 中演示了 Sophus 库的使用
+
+### trajectoryError.cpp
+
+trajectoryError.cpp 中演示了如何评估轨迹的误差
+
+```shell
+cd slambook
+rviz2 -d src/ch4/rviz/trajectoryError.rviz
+ros2 run ch4 trajectoryError
+```

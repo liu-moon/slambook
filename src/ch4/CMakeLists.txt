@@ -5,6 +5,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+
+set(CMAKE_BUILD_TYPE "Debug")
+
+# 只在 Debug 模式下使用 no optimization (-O0)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)

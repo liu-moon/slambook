@@ -18,7 +18,7 @@
       "request": "launch",
       "type": "cppdbg",
       "cwd": "${workspaceFolder}/",
-      "program": "${workspaceFolder}/install/ch3/lib/ch3/plotTrajectory_arrow"
+      "program": "${workspaceFolder}/install/ch4/lib/ch4/trajectoryError"
     },
     {
       "name": "C/C++ Runner: Debug Session",
