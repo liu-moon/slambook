@@ -1,20 +1,43 @@
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ROS: Launch my file",
+      "request": "launch",
+      "target": "${workspaceFolder}/install/",
+      "launch": [
+        "rviz",
+        "gz",
+        "gzserver",
+        "gzclient"
+      ],
+      "type": "ros"
+    },
+    {
+      "name": "C++ Debugger",
+      "request": "launch",
+      "type": "cppdbg",
+      "cwd": "${workspaceFolder}/",
+      "program": "${workspaceFolder}/install/ch3/lib/ch3/plotTrajectory_arrow"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "cwd": "/home/liuiu/桌面/slambook/doc",
+      "program": "/home/liuiu/桌面/slambook/doc/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
         {
-            "name": "ROS: Launch my file",
-            "request": "launch",
-            "target": "${workspaceFolder}/install/",
-            "launch": ["rviz", "gz", "gzserver", "gzclient"],
-            "type": "ros"
-        },
-
-        {
-            "name": "C++ Debugger",
-            "request": "launch",
-            "type": "cppdbg",
-            "cwd": "/",
-            "program": "${workspaceFolder}/install/ch2/lib/ch2/helloSLAM"
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ]
 }

@@ -17,6 +17,8 @@ class TrajectoryPublisher : public rclcpp::Node {
 public:
     TrajectoryPublisher() : Node("trajectory_publisher") {
         // 创建发布器，发布轨迹信息
+        // 发布器的主题为 robot_path
+        // 消息队列的大小为 10
         path_publisher_ = this->create_publisher<nav_msgs::msg::Path>("robot_path", 10);
 
         // 读取轨迹文件
@@ -44,7 +46,9 @@ private:
         while (!fin.eof()) {
             double time, tx, ty, tz, qx, qy, qz, qw;
             fin >> time >> tx >> ty >> tz >> qx >> qy >> qz >> qw;
+            // 构造旋转
             Isometry3d Twr(Quaterniond(qw, qx, qy, qz));
+            // 构造平移
             Twr.pretranslate(Vector3d(tx, ty, tz));
             poses.push_back(Twr);
         }
@@ -53,7 +57,7 @@ private:
     }
 
     void PublishPath(const vector<Isometry3d, Eigen::aligned_allocator<Isometry3d>> &poses) {
-        nav_msgs::msg::Path path_msg;
+        nav_msgs::msg::Path path_msg; // 定义路径数据
         path_msg.header.stamp = this->get_clock()->now();
         path_msg.header.frame_id = "map";  // 假设我们在“map”坐标系中
 

@@ -4,3 +4,4 @@ install/*
 !install/.gitkeep
 build/*
 !build/.gitkeep
+.idea/*

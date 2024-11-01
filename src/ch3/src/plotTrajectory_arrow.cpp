@@ -83,8 +83,8 @@ private:
         visualization_msgs::msg::MarkerArray marker_array;
 
         for (size_t i = 0; i < poses.size(); i++) {
-            Vector3d Ow = poses[i].translation();
-            Vector3d Xw = poses[i] * (0.1 * Vector3d(1, 0, 0));
+            Vector3d Ow = poses[i].translation(); // 取平移 得到当前位姿在全局坐标系下的位置
+            Vector3d Xw = poses[i] * (0.1 * Vector3d(1, 0, 0)); // 构建 x 轴 将尺度缩放为 0.1 倍
             Vector3d Yw = poses[i] * (0.1 * Vector3d(0, 1, 0));
             Vector3d Zw = poses[i] * (0.1 * Vector3d(0, 0, 1));
 
@@ -121,9 +121,9 @@ private:
         marker.points.push_back(p_start);
         marker.points.push_back(p_end);
 
-        marker.scale.x = 0.02;  // 箭头的杆的粗细
-        marker.scale.y = 0.04;  // 箭头的头的宽度
-        marker.scale.z = 0.04;  // 箭头的头的高度
+        marker.scale.x = 0.01;  // 箭头的杆的粗细
+        marker.scale.y = 0.02;  // 箭头的头的宽度
+        marker.scale.z = 0.02;  // 箭头的头的高度
 
         marker.color.r = color[0];
         marker.color.g = color[1];
