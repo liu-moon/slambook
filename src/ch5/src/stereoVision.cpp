@@ -53,83 +53,138 @@ public:
             point[1] = y * depth;
             point[2] = depth;
 
+            // 获取灰度值并转换为RGB
+            uint8_t intensity = left.at<uchar>(v, u);
+            point[3] = intensity;
+            
             pointcloud.push_back(point);
         }
 
-    // todo: 窗口显示bug
-    // cv::imshow("disparity", disparity / 96.0);
-    // cv::waitKey(0);
     // 画出点云
     // 生成点云并发布到 ROS 2
-    publishPointCloud(disparity, left, fx, fy, cx, cy, b);
+    // publishPointCloud(disparity, left, fx, fy, cx, cy, b);
+    publishPointCloud(pointcloud);
+
+    cv::imshow("disparity", disparity / 96.0);
+    cv::waitKey(0); 
   }
 
-  void publishPointCloud(const cv::Mat &disparity, const cv::Mat &left_image, double fx, double fy, double cx, double cy, double b)
-    {
-        // 创建 PointCloud2 消息
-        auto pointcloud_msg = sensor_msgs::msg::PointCloud2();
-        pointcloud_msg.header.frame_id = "map";
-        pointcloud_msg.header.stamp = this->now();
-        pointcloud_msg.height = 1; // 点云的高度
-        pointcloud_msg.width = left_image.rows * left_image.cols; // 点云的宽度
-        pointcloud_msg.is_dense = false;
-        pointcloud_msg.is_bigendian = false;
+//   void publishPointCloud(const cv::Mat &disparity, const cv::Mat &left_image, double fx, double fy, double cx, double cy, double b)
+//     {
+//         // 创建 PointCloud2 消息
+//         auto pointcloud_msg = sensor_msgs::msg::PointCloud2();
+//         pointcloud_msg.header.frame_id = "map";
+//         pointcloud_msg.header.stamp = this->now();
+//         pointcloud_msg.height = 1; // 无序点云
+//         pointcloud_msg.width = left_image.rows * left_image.cols; // 点云的宽度
+//         pointcloud_msg.is_dense = false; // 非稠密点云
+//         pointcloud_msg.is_bigendian = false; // 小端存储
 
-        // 设置字段
-        sensor_msgs::PointCloud2Modifier modifier(pointcloud_msg);
-        modifier.setPointCloud2FieldsByString(2, "xyz", "rgb");
+//         // 设置字段
+//         sensor_msgs::PointCloud2Modifier modifier(pointcloud_msg);
+//         modifier.setPointCloud2FieldsByString(2, "xyz", "rgb"); // 设置2个字段 xyz是点的空间位置 rgb表示点的颜色数据
 
-        sensor_msgs::PointCloud2Iterator<float> iter_x(pointcloud_msg, "x");
-        sensor_msgs::PointCloud2Iterator<float> iter_y(pointcloud_msg, "y");
-        sensor_msgs::PointCloud2Iterator<float> iter_z(pointcloud_msg, "z");
-        sensor_msgs::PointCloud2Iterator<uint8_t> iter_r(pointcloud_msg, "r");
-        sensor_msgs::PointCloud2Iterator<uint8_t> iter_g(pointcloud_msg, "g");
-        sensor_msgs::PointCloud2Iterator<uint8_t> iter_b(pointcloud_msg, "b");
+//         sensor_msgs::PointCloud2Iterator<float> iter_x(pointcloud_msg, "x");
+//         sensor_msgs::PointCloud2Iterator<float> iter_y(pointcloud_msg, "y");
+//         sensor_msgs::PointCloud2Iterator<float> iter_z(pointcloud_msg, "z");
+//         sensor_msgs::PointCloud2Iterator<uint8_t> iter_r(pointcloud_msg, "r");
+//         sensor_msgs::PointCloud2Iterator<uint8_t> iter_g(pointcloud_msg, "g");
+//         sensor_msgs::PointCloud2Iterator<uint8_t> iter_b(pointcloud_msg, "b");
 
-        int valid_points = 0;
+//         int valid_points = 0;
 
-        // 遍历每个像素并计算 3D 点云
-        for (int v = 0; v < disparity.rows; v++)
-        {
-            for (int u = 0; u < disparity.cols; u++)
-            {
-                float disp = disparity.at<float>(v, u);
-                if (disp <= 0.0 || disp >= 96.0)
-                {
-                    // 如果视差无效，则跳过
-                    continue;
-                }
+//         // 遍历每个像素并计算 3D 点云
+//         for (int v = 0; v < disparity.rows; v++)
+//         {
+//             for (int u = 0; u < disparity.cols; u++)
+//             {
+//                 float disp = disparity.at<float>(v, u);
+//                 if (disp <= 0.0 || disp >= 96.0)
+//                 {
+//                     // 如果视差无效，则跳过
+//                     continue;
+//                 }
 
-                double x = (u - cx) / fx;
-                double y = (v - cy) / fy;
-                double depth = fx * b / disp;
+//                 double x = (u - cx) / fx;
+//                 double y = (v - cy) / fy;
+//                 double depth = fx * b / disp;
 
-                // 填充点云数据
-                *iter_x = static_cast<float>(x * depth);
-                *iter_y = static_cast<float>(y * depth);
-                *iter_z = static_cast<float>(depth);
+//                 // 填充点云数据
+//                 *iter_x = static_cast<float>(x * depth);
+//                 *iter_y = static_cast<float>(y * depth);
+//                 *iter_z = static_cast<float>(depth);
 
-                // 获取灰度值并转换为RGB
-                uint8_t intensity = left_image.at<uchar>(v, u);
-                *iter_r = intensity;
-                *iter_g = intensity;
-                *iter_b = intensity;
+//                 // 获取灰度值并转换为RGB
+//                 uint8_t intensity = left_image.at<uchar>(v, u);
+//                 *iter_r = intensity;
+//                 *iter_g = intensity;
+//                 *iter_b = intensity;
 
-                ++iter_x; ++iter_y; ++iter_z;
-                ++iter_r; ++iter_g; ++iter_b;
+//                 ++iter_x; ++iter_y; ++iter_z;
+//                 ++iter_r; ++iter_g; ++iter_b;
                 
-                valid_points++;  // 计数有效点数
-            }
-        }
+//                 valid_points++;  // 计数有效点数
+//             }
+//         }
 
-        RCLCPP_INFO(this->get_logger(), "Point cloud generated with %d valid points. Publishing to /pointcloud...", valid_points);
+//         RCLCPP_INFO(this->get_logger(), "Point cloud generated with %d valid points. Publishing to /pointcloud...", valid_points);
 
-        // 发布点云消息
-        pointcloud_publisher_->publish(pointcloud_msg);
+//         // 发布点云消息
+//         pointcloud_publisher_->publish(pointcloud_msg);
 
-        RCLCPP_INFO(this->get_logger(), "Point cloud published successfully.");
+//         RCLCPP_INFO(this->get_logger(), "Point cloud published successfully.");
+//     }
+
+  void publishPointCloud(vector<Vector4d, Eigen::aligned_allocator<Vector4d>> &pointcloud)
+  {
+    // 创建 PointCloud2 消息
+    auto pointcloud_msg = sensor_msgs::msg::PointCloud2();
+    pointcloud_msg.header.frame_id = "map";
+    pointcloud_msg.header.stamp = this->now();
+    pointcloud_msg.height = 1; // 无序点云
+    pointcloud_msg.width = pointcloud.size(); // 点云的宽度
+    pointcloud_msg.is_dense = false; // 非稠密点云
+    pointcloud_msg.is_bigendian = false; // 小端存储
+
+    // 设置字段
+    sensor_msgs::PointCloud2Modifier modifier(pointcloud_msg);
+    modifier.setPointCloud2FieldsByString(2, "xyz", "rgb"); // 设置2个字段 xyz是点的空间位置 rgb表示点的颜色数据
+
+    sensor_msgs::PointCloud2Iterator<float> iter_x(pointcloud_msg, "x");
+    sensor_msgs::PointCloud2Iterator<float> iter_y(pointcloud_msg, "y");
+    sensor_msgs::PointCloud2Iterator<float> iter_z(pointcloud_msg, "z");
+    sensor_msgs::PointCloud2Iterator<uint8_t> iter_r(pointcloud_msg, "r");
+    sensor_msgs::PointCloud2Iterator<uint8_t> iter_g(pointcloud_msg, "g");
+    sensor_msgs::PointCloud2Iterator<uint8_t> iter_b(pointcloud_msg, "b");
+
+    int valid_points = 0;
+    for (size_t i = 0; i < pointcloud.size(); i++)
+    {
+        // 填充点云数据
+        *iter_x = pointcloud[i][0];
+        *iter_y = pointcloud[i][1];
+        *iter_z = pointcloud[i][2];
+
+        // 获取灰度值并转换为RGB
+        uint8_t intensity = static_cast<uint8_t>(pointcloud[i][3]);
+
+        *iter_r = intensity;
+        *iter_g = intensity;
+        *iter_b = intensity;
+
+        ++iter_x; ++iter_y; ++iter_z;
+        ++iter_r; ++iter_g; ++iter_b;
+        
+        valid_points++;  // 计数有效点数
     }
+    RCLCPP_INFO(this->get_logger(), "Point cloud generated with %d valid points. Publishing to /pointcloud...", valid_points);
 
+    // 发布点云消息
+    pointcloud_publisher_->publish(pointcloud_msg);
+
+    RCLCPP_INFO(this->get_logger(), "Point cloud published successfully.");
+
+  }
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_publisher_;
 };
 

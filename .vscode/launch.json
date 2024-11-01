@@ -18,7 +18,9 @@
       "request": "launch",
       "type": "cppdbg",
       "cwd": "${workspaceFolder}/",
-      "program": "${workspaceFolder}/install/ch4/lib/ch4/trajectoryError"
+      // "args": ["/home/liuiu/桌面/slambook/src/ch5/src/ubuntu.png"],
+      "program": "${workspaceFolder}/install/ch5/lib/ch5/jointMap",
+      "miDebuggerPath": "/usr/bin/gdb"
     },
     {
       "name": "C/C++ Runner: Debug Session",

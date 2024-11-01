@@ -60,7 +60,7 @@ private:
         double cy = 253.5;
         double fx = 518.0;
         double fy = 519.0;
-        double depthScale = 1000.0;
+        double depthScale = 1000.0; // 深度比例因子
         vector<Vector6d, Eigen::aligned_allocator<Vector6d>> pointcloud;
         pointcloud.reserve(1000000);
 
@@ -77,12 +77,12 @@ private:
                     if (d == 0) continue; // 跳过无效的深度值
 
                     Eigen::Vector3d point;
-                    point[2] = double(d) / depthScale;
-                    point[0] = (u - cx) * point[2] / fx;
-                    point[1] = (v - cy) * point[2] / fy;
-                    Eigen::Vector3d pointWorld = T * point;
+                    point[2] = double(d) / depthScale;  // 求 Z
+                    point[0] = (u - cx) * point[2] / fx;  // 求 X
+                    point[1] = (v - cy) * point[2] / fy;  // 求 Y
+                    Eigen::Vector3d pointWorld = T * point;  // 通过外参数 变换到世界坐标系
 
-                    Vector6d p;
+                    Vector6d p; // 用于存储点 前三维是世界坐标系的坐标 后三维是点的颜色
                     p.head<3>() = pointWorld;
                     p[5] = color.data[v * color.step + u * color.channels()];   // blue
                     p[4] = color.data[v * color.step + u * color.channels() + 1]; // green

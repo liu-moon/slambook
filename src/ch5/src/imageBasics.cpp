@@ -12,7 +12,7 @@ public:
     // 创建一个发布器，发布sensor_msgs/Image类型的消息
     image_publisher_ = this->create_publisher<sensor_msgs::msg::Image>("image", 10);
     // 启动定时器，每500ms发布一次图像
-    timer_ = this->create_wall_timer(500ms, std::bind(&ImagePublisherNode::timerCallback, this));
+    timer_ = this->create_wall_timer(5s, std::bind(&ImagePublisherNode::timerCallback, this));
   }
 
   void loadAndProcessImage(const std::string& file_path) {
@@ -51,14 +51,14 @@ public:
   // 修改 image_another 会导致 image 发生变化
   image_another(cv::Rect(0, 0, 100, 100)).setTo(0); // 将左上角100*100的块置零
   cv::imshow("image", image_);
-  cv::waitKey(0);
+  cv::waitKey(3000);
 
   // 使用clone函数来拷贝数据
   cv::Mat image_clone = image_.clone();
   image_clone(cv::Rect(0, 0, 100, 100)).setTo(255);
   cv::imshow("image", image_);
   cv::imshow("image_clone", image_clone);
-  cv::waitKey(0);
+  cv::waitKey(3000);
 
   // 对于图像还有很多基本的操作,如剪切,旋转,缩放等,限于篇幅就不一一介绍了,请参看OpenCV官方文档查询每个函数的调用方法.
   cv::destroyAllWindows();

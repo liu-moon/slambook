@@ -68,14 +68,44 @@ ros2 run ch3 plotTrajectory_arrow
 
 ### useSophus.cpp
 
-useSophus.cpp 中演示了 Sophus 库的使用
+useSophus.cpp 演示了 Sophus 库的使用
 
 ### trajectoryError.cpp
 
-trajectoryError.cpp 中演示了如何评估轨迹的误差
+trajectoryError.cpp 演示了如何评估轨迹的误差
 
 ```shell
 cd slambook
 rviz2 -d src/ch4/rviz/trajectoryError.rviz
 ros2 run ch4 trajectoryError
+```
+
+## 第5讲 相机与图像
+
+### imageBasics.cpp
+
+imageBasics.cpp 演示了图像的基本操作，我在案例中添加了定时器发布图像数据的功能。
+
+### undistortImage.cpp
+
+undistortImage.cpp 演示了如何去除图像的径向和切向畸变的过程。
+
+### stereoVision.cpp
+
+stereoVision.cpp 演示了利用双目视觉原理构成点云 主要采用了 SGBM 算法实现的 对于SGBM 算法中的参数设置 可以通过设置滑块的方式 查看相应效果再确定
+
+```shell
+cd slambook
+rviz2 -d src/ch5/rviz/stereoVision.rviz
+ros2 run ch5 stereoVision
+```
+
+### jointMap.cpp
+
+jointMap.cpp 演示了利用RGB-D相机对点云进行拼接的过程
+
+```shell
+cd slambook
+rviz2 -d src/ch5/rviz/jointMap.rviz
+ros2 run ch5 jointMap
 ```

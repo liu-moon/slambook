@@ -36,7 +36,8 @@ public:
     // 画图去畸变后图像
     cv::imshow("distorted", image);
     cv::imshow("undistorted", image_undistort);
-    cv::waitKey();
+    cv::waitKey(10000);
+    cv::destroyAllWindows();
   }
   std::string image_file = "src/ch5/src/distorted.png";
   
