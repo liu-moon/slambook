@@ -11,14 +11,8 @@ using namespace cv;
 
 class FeatureExtractionNode : public rclcpp::Node {
 public:
-  FeatureExtractionNode() : Node("feature_extraction_node") {
-    // 初始化参数
-    this->declare_parameter<string>("img1_path", "/home/liuiu/桌面/slambook/src/ch7/src/1.png");
-    this->declare_parameter<string>("img2_path", "/home/liuiu/桌面/slambook/src/ch7/src/2.png");
-
-    // 获取图像路径
-    this->get_parameter("img1_path", img1_path_);
-    this->get_parameter("img2_path", img2_path_);
+  FeatureExtractionNode(const std::string& img1_path, const std::string& img2_path) 
+  : Node("feature_extraction_node"), img1_path_(img1_path), img2_path_(img2_path) {
 
     if (img1_path_.empty() || img2_path_.empty()) {
       RCLCPP_ERROR(this->get_logger(), "请提供img1_path和img2_path参数。");
@@ -33,12 +27,6 @@ private:
     // 读取图像
     Mat img_1 = imread(img1_path_, IMREAD_COLOR);
     Mat img_2 = imread(img2_path_, IMREAD_COLOR);
-
-    if (img_1.empty() || img_2.empty()) {
-      RCLCPP_ERROR(this->get_logger(), "无法加载图像");
-      rclcpp::shutdown();
-      return;
-    }
 
     // 初始化
     vector<KeyPoint> keypoints_1, keypoints_2;
@@ -60,7 +48,7 @@ private:
     RCLCPP_INFO(this->get_logger(), "ORB特征提取耗时 = %f 秒", time_used.count());
 
     Mat outimg1;
-    drawKeypoints(img_1, keypoints_1, outimg1, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+    drawKeypoints(img_1, keypoints_1, outimg1, Scalar::all(-1), DrawMatchesFlags::DEFAULT); // Scalar::all(-1)（关键点颜色:表示自动选择颜色） DrawMatchesFlags::DEFAULT（绘制标志:默认圆形）
     imshow("ORB features", outimg1);
 
     // 第三步:匹配 BRIEF 描述子，使用 Hamming 距离
@@ -102,7 +90,15 @@ private:
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<FeatureExtractionNode>();
+
+  if (argc < 3)
+  {
+    std::cerr << "Usage: ros2 run <package_name> <executable> <img1_path> <img2_path>" << std::endl;
+    return 1;
+  }
+
+  auto node = std::make_shared<FeatureExtractionNode>(std::string(argv[1]),std::string(argv[2]));
+  
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

@@ -5,6 +5,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(CMAKE_BUILD_TYPE "Debug")
+
+# 只在 Debug 模式下使用 no optimization (-O0)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -36,8 +41,11 @@ ament_target_dependencies(orb_cv OpenCV rclcpp cv_bridge)
 add_executable(orb_self src/orb_self.cpp)
 ament_target_dependencies(orb_self OpenCV rclcpp cv_bridge)
 
+add_executable(pose_estimation_2d2d src/pose_estimation_2d2d.cpp)
+ament_target_dependencies(pose_estimation_2d2d OpenCV rclcpp cv_bridge)
+
 
 install(TARGETS
-  orb_cv orb_self
+  orb_cv orb_self pose_estimation_2d2d
   DESTINATION lib/${PROJECT_NAME}
 )

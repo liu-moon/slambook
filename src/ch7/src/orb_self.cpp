@@ -10,14 +10,8 @@ typedef vector<uint32_t> DescType; // 描述子类型
 
 class ORBFeatureExtractionNode : public rclcpp::Node {
 public:
-  ORBFeatureExtractionNode() : Node("orb_feature_extraction_node") {
-    // 定义图像路径参数
-    this->declare_parameter<string>("first_image_path", "/home/liuiu/桌面/slambook/src/ch7/src/1.png");
-    this->declare_parameter<string>("second_image_path", "/home/liuiu/桌面/slambook/src/ch7/src/2.png");
-
-    // 读取图像路径参数
-    this->get_parameter("first_image_path", first_image_path_);
-    this->get_parameter("second_image_path", second_image_path_);
+  ORBFeatureExtractionNode(const std::string& img1_path, const std::string& img2_path) 
+  : Node("orb_feature_extraction_node"),first_image_path_(img1_path), second_image_path_(img2_path) {
 
     // 加载图像
     first_image_ = cv::imread(first_image_path_, cv::IMREAD_GRAYSCALE);
@@ -36,7 +30,7 @@ private:
   void process_images() {
     // 检测FAST角点
     vector<cv::KeyPoint> keypoints1, keypoints2;
-    cv::FAST(first_image_, keypoints1, 40);
+    cv::FAST(first_image_, keypoints1, 40); // 阈值为40
     cv::FAST(second_image_, keypoints2, 40);
 
     // 计算描述子
@@ -64,20 +58,20 @@ private:
 
   // 计算描述子
   void ComputeORB(const cv::Mat &img, vector<cv::KeyPoint> &keypoints, vector<DescType> &descriptors) {
-    const int half_patch_size = 8;
-    const int half_boundary = 16;
-    int bad_points = 0;
+    const int half_patch_size = 8;  // 半窗口大小
+    const int half_boundary = 16; // 边界的宽度
+    int bad_points = 0; // 坏特征点的数量
 
-    for (auto &kp: keypoints) {
+    for (auto &kp: keypoints) { // 遍历FAST角点
       if (kp.pt.x < half_boundary || kp.pt.y < half_boundary ||
-          kp.pt.x >= img.cols - half_boundary || kp.pt.y >= img.rows - half_boundary) {
+          kp.pt.x >= img.cols - half_boundary || kp.pt.y >= img.rows - half_boundary) { // 检查关键点是否在图像边界附近，如果关键点位于边界附近，则将其标记为“坏点”
         descriptors.push_back({});
         bad_points++;
         continue;
       }
 
       float m01 = 0, m10 = 0;
-      for (int dx = -half_patch_size; dx < half_patch_size; ++dx) {
+      for (int dx = -half_patch_size; dx < half_patch_size; ++dx) { // 对非“坏点” 计算图像中关键点 kp 周围的图像矩 确定关键点的方向
         for (int dy = -half_patch_size; dy < half_patch_size; ++dy) {
           uchar pixel = img.at<uchar>(kp.pt.y + dy, kp.pt.x + dx);
           m10 += dx * pixel;
@@ -86,10 +80,10 @@ private:
       }
 
       float m_sqrt = sqrt(m01 * m01 + m10 * m10) + 1e-18;
-      float sin_theta = m01 / m_sqrt;
+      float sin_theta = m01 / m_sqrt; // 计算方向
       float cos_theta = m10 / m_sqrt;
 
-      DescType desc(8, 0);
+      DescType desc(8, 0);  // 用于存储特征点的描述子 orb特征点是256位的 将其分成8个部分 每部分32位
       for (int i = 0; i < 8; i++) {
         uint32_t d = 0;
         for (int k = 0; k < 32; k++) {
@@ -97,10 +91,10 @@ private:
           cv::Point2f p(ORB_pattern[idx_pq * 4], ORB_pattern[idx_pq * 4 + 1]);
           cv::Point2f q(ORB_pattern[idx_pq * 4 + 2], ORB_pattern[idx_pq * 4 + 3]);
 
-          cv::Point2f pp = cv::Point2f(cos_theta * p.x - sin_theta * p.y, sin_theta * p.x + cos_theta * p.y) + kp.pt;
+          cv::Point2f pp = cv::Point2f(cos_theta * p.x - sin_theta * p.y, sin_theta * p.x + cos_theta * p.y) + kp.pt; // 旋转并平移
           cv::Point2f qq = cv::Point2f(cos_theta * q.x - sin_theta * q.y, sin_theta * q.x + cos_theta * q.y) + kp.pt;
 
-          if (img.at<uchar>(pp.y, pp.x) < img.at<uchar>(qq.y, qq.x)) {
+          if (img.at<uchar>(pp.y, pp.x) < img.at<uchar>(qq.y, qq.x)) { // 比较两个点的亮度值
             d |= 1 << k;
           }
         }
@@ -117,21 +111,21 @@ private:
     const int d_max = 40;
 
     for (size_t i1 = 0; i1 < desc1.size(); ++i1) {
-      if (desc1[i1].empty()) continue;
+      if (desc1[i1].empty()) continue;  // 检查是否是 “坏点”
       cv::DMatch m{i1, 0, 256};
       for (size_t i2 = 0; i2 < desc2.size(); ++i2) {
-        if (desc2[i2].empty()) continue;
+        if (desc2[i2].empty()) continue; // 检查是否是 “坏点”
         int distance = 0;
         for (int k = 0; k < 8; k++) {
-          distance += _mm_popcnt_u32(desc1[i1][k] ^ desc2[i2][k]);
+          distance += _mm_popcnt_u32(desc1[i1][k] ^ desc2[i2][k]);  // 计算汉明距离
         }
-        if (distance < d_max && distance < m.distance) {
-          m.distance = distance;
-          m.trainIdx = i2;
+        if (distance < d_max && distance < m.distance) {  // 判断是否小于max 保证相似的质量 以及 是否为最小的距离
+          m.distance = distance;  // 更新距离
+          m.trainIdx = i2;  // 更新索引
         }
       }
-      if (m.distance < d_max) {
-        matches.push_back(m);
+      if (m.distance < d_max) { // 判断是否小于max
+        matches.push_back(m); // 找到了匹配点
       }
     }
   }
@@ -402,7 +396,14 @@ private:
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<ORBFeatureExtractionNode>();
+
+  if (argc < 3)
+  {
+    std::cerr << "Usage: ros2 run <package_name> <executable> <img1_path> <img2_path>" << std::endl;
+    return 1;
+  }
+
+  auto node = std::make_shared<ORBFeatureExtractionNode>(std::string(argv[1]),std::string(argv[2]));
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

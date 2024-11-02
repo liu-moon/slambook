@@ -18,8 +18,8 @@
       "request": "launch",
       "type": "cppdbg",
       "cwd": "${workspaceFolder}/",
-      // "args": ["/home/liuiu/桌面/slambook/src/ch5/src/ubuntu.png"],
-      "program": "${workspaceFolder}/install/ch5/lib/ch5/jointMap",
+      "args": ["./src/ch7/src/1.png","./src/ch7/src/2.png"],
+      "program": "${workspaceFolder}/install/ch7/lib/ch7/pose_estimation_2d2d",
       "miDebuggerPath": "/usr/bin/gdb"
     },
     {
