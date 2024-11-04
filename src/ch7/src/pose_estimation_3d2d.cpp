@@ -28,7 +28,7 @@ void bundleAdjustmentG2O(
     const Mat &K,
     Sophus::SE3d &pose);
 
-class VertexPose : public g2o::BaseVertex<6, Sophus::SE3d>
+class VertexPose : public g2o::BaseVertex<6, Sophus::SE3d> // 顶点的维度6 Sophus::SE3d:顶点估计值类型
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -39,7 +39,7 @@ public:
     }
 
     /// left multiplication on SE3
-    virtual void oplusImpl(const double *update) override
+    virtual void oplusImpl(const double *update) override // 更新顶点的估计值
     {
         Eigen::Matrix<double, 6, 1> update_eigen;
         update_eigen << update[0], update[1], update[2], update[3], update[4], update[5];
@@ -58,16 +58,16 @@ public:
 
     EdgeProjection(const Eigen::Vector3d &pos, const Eigen::Matrix3d &K) : _pos3d(pos), _K(K) {}
 
-    virtual void computeError() override
+    virtual void computeError() override    // 计算重投影误差
     {
         const VertexPose *v = static_cast<VertexPose *>(_vertices[0]);
         Sophus::SE3d T = v->estimate();
-        Eigen::Vector3d pos_pixel = _K * (T * _pos3d);
-        pos_pixel /= pos_pixel[2];
-        _error = _measurement - pos_pixel.head<2>();
+        Eigen::Vector3d pos_pixel = _K * (T * _pos3d); // 将3D点 _pos3d 生成归一化图像坐标 pos_pixel
+        pos_pixel /= pos_pixel[2];  // 归一化
+        _error = _measurement - pos_pixel.head<2>(); // pos_pixel.head<2>() 获取 pos_pixel 的前两个元素，即 x 和 y 坐标
     }
 
-    virtual void linearizeOplus() override
+    virtual void linearizeOplus() override  // 计算误差函数相对于优化变量的雅可比矩阵
     {
         const VertexPose *v = static_cast<VertexPose *>(_vertices[0]);
         Sophus::SE3d T = v->estimate();
@@ -331,7 +331,7 @@ void bundleAdjustmentG2O(
 {
 
     // 构建图优化，先设定g2o
-    typedef g2o::BlockSolver<g2o::BlockSolverTraits<6, 3>> BlockSolverType;           // pose is 6, landmark is 3
+    typedef g2o::BlockSolver<g2o::BlockSolverTraits<6, 3>> BlockSolverType;           // pose is 6, landmark is 3 每个误差项优化变量维度为6，误差值维度为3
     typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // 线性求解器类型
     // 梯度下降方法，可以从GN, LM, DogLeg 中选
     auto solver = new g2o::OptimizationAlgorithmGaussNewton(
@@ -368,9 +368,9 @@ void bundleAdjustmentG2O(
     }
 
     chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
-    optimizer.setVerbose(true);
+    optimizer.setVerbose(true); // 打开调试输出
     optimizer.initializeOptimization();
-    optimizer.optimize(10);
+    optimizer.optimize(10); // 最大迭代次数10 optimize中执行 computeError linearizeOplus oplusImpl
     chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
     chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
     cout << "optimization costs time: " << time_used.count() << " seconds." << endl;

@@ -71,7 +71,19 @@ set_target_properties(pose_estimation_3d2d PROPERTIES
 )
 
 
+add_executable(pose_estimation_3d3d src/pose_estimation_3d3d.cpp)
+ament_target_dependencies(pose_estimation_3d3d OpenCV rclcpp cv_bridge Eigen3)
+
+target_link_libraries(pose_estimation_3d3d ${OpenCV_LIBS}
+  /usr/local/g2o_debug/lib/libg2o_core_d.so
+  /usr/local/g2o_debug/lib/libg2o_stuff_d.so)
+  
+set_target_properties(pose_estimation_3d3d PROPERTIES
+  BUILD_RPATH "/usr/local/g2o_debug/lib"
+  INSTALL_RPATH "/usr/local/g2o_debug/lib"
+)
+
 install(TARGETS
-  orb_cv orb_self pose_estimation_2d2d triangulation pose_estimation_3d2d
+  orb_cv orb_self pose_estimation_2d2d triangulation pose_estimation_3d2d pose_estimation_3d3d
   DESTINATION lib/${PROJECT_NAME}
 )
