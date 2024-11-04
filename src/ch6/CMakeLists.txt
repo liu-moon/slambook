@@ -10,6 +10,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(CMAKE_BUILD_TYPE "Debug")
+
+# 只在 Debug 模式下使用 no optimization (-O0)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -39,11 +44,11 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 # )
 # FetchContent_MakeAvailable(g2o)
 
-set(g2o_path  ${PROJECT_SOURCE_DIR}/../../3rdparty/g2o)
-message(WARNING "CMAKE_SOURCE_DIR: ${g2o_path}")
+# set(g2o_path  ${PROJECT_SOURCE_DIR}/../../3rdparty/g2o)
+# message(WARNING "CMAKE_SOURCE_DIR: ${g2o_path}")
 
 
-include_directories(${g2o_path}/include)
+# include_directories(${g2o_path}/include)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -67,15 +72,17 @@ ament_target_dependencies(gaussNewton rclcpp Eigen3 OpenCV)
 add_executable(ceresCurveFitting src/ceresCurveFitting.cpp)
 ament_target_dependencies(ceresCurveFitting rclcpp Eigen3 OpenCV)
 
+include_directories("/usr/local/g2o_debug/include")
+
+
 add_executable(g2oCurveFitting src/g2oCurveFitting.cpp)
 ament_target_dependencies(g2oCurveFitting rclcpp Eigen3 OpenCV)
+target_link_libraries(g2oCurveFitting ${OpenCV_LIBS}
+  /usr/local/g2o_debug/lib/libg2o_core_d.so
+  /usr/local/g2o_debug/lib/libg2o_stuff_d.so)
 
 # 链接Ceres库
 target_link_libraries(ceresCurveFitting /usr/local/lib/libceres.so glog::glog)
-# 链接OpenCV库和 g2o 库
-target_link_libraries(g2oCurveFitting ${OpenCV_LIBS} 
-    ${g2o_path}/lib/libg2o_core.so 
-    ${g2o_path}/lib/libg2o_stuff.so)
 
 install(TARGETS
   gaussNewton ceresCurveFitting g2oCurveFitting

@@ -13,7 +13,7 @@ using namespace cv;
 class PoseEstimation : public rclcpp::Node {
 public:
   PoseEstimation(const std::string& img1_path, const std::string& img2_path) 
-  : Node("feature_extraction_node"), img1_path_(img1_path), img2_path_(img2_path) {
+  : Node("PoseEstimation_node"), img1_path_(img1_path), img2_path_(img2_path) {
 
     if (img1_path_.empty() || img2_path_.empty()) {
       RCLCPP_ERROR(this->get_logger(), "请提供img1_path和img2_path参数。");
