@@ -20,7 +20,7 @@ using namespace cv;
 
 
 /// vertex and edges used in g2o ba
-class VertexPose : public g2o::BaseVertex<6, Sophus::SE3d> {
+class VertexPose : public g2o::BaseVertex<6, Sophus::SE3d> { // 顶点的维度6 Sophus::SE3d:顶点估计值类型
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
@@ -29,7 +29,7 @@ public:
   }
 
   /// left multiplication on SE3
-  virtual void oplusImpl(const double *update) override {
+  virtual void oplusImpl(const double *update) override { // 更新顶点的估计值 _estimate
     Eigen::Matrix<double, 6, 1> update_eigen;
     update_eigen << update[0], update[1], update[2], update[3], update[4], update[5];
     _estimate = Sophus::SE3d::exp(update_eigen) * _estimate;
@@ -49,15 +49,15 @@ public:
 
   virtual void computeError() override {
     const VertexPose *pose = static_cast<const VertexPose *> ( _vertices[0] );
-    _error = _measurement - pose->estimate() * _point;
+    _error = _measurement - pose->estimate() * _point;  // 计算观测点和预测点的差异
   }
 
-  virtual void linearizeOplus() override {
+  virtual void linearizeOplus() override { // 计算误差函数对优化变量的雅可比
     VertexPose *pose = static_cast<VertexPose *>(_vertices[0]);
     Sophus::SE3d T = pose->estimate();
-    Eigen::Vector3d xyz_trans = T * _point;
-    _jacobianOplusXi.block<3, 3>(0, 0) = -Eigen::Matrix3d::Identity();
-    _jacobianOplusXi.block<3, 3>(0, 3) = Sophus::SO3d::hat(xyz_trans);
+    Eigen::Vector3d xyz_trans = T * _point; // _point 在相机坐标系下的位置
+    _jacobianOplusXi.block<3, 3>(0, 0) = -Eigen::Matrix3d::Identity(); // 对平移部分的导数
+    _jacobianOplusXi.block<3, 3>(0, 3) = Sophus::SO3d::hat(xyz_trans); // 旋转部分的导数
   }
 
   bool read(istream &in) {}
@@ -92,20 +92,20 @@ public:
         // 建立3D点
         Mat depth1 = imread(depth1_path_, IMREAD_UNCHANGED); // 深度图为16位无符号数，单通道图像
         Mat depth2 = imread(depth2_path_, IMREAD_UNCHANGED); // 深度图为16位无符号数，单通道图像
-        Mat K = (Mat_<double>(3, 3) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1);
+        Mat K = (Mat_<double>(3, 3) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1); // 内参
         vector<Point3f> pts1, pts2;
 
         for (DMatch m : matches)
         {
-            ushort d1 = depth1.ptr<unsigned short>(int(keypoints_1[m.queryIdx].pt.y))[int(keypoints_1[m.queryIdx].pt.x)];
+            ushort d1 = depth1.ptr<unsigned short>(int(keypoints_1[m.queryIdx].pt.y))[int(keypoints_1[m.queryIdx].pt.x)];   // 通过行指针以及列索引获取深度信息
             ushort d2 = depth2.ptr<unsigned short>(int(keypoints_2[m.trainIdx].pt.y))[int(keypoints_2[m.trainIdx].pt.x)];
             if (d1 == 0 || d2 == 0) // bad depth
                 continue;
-            Point2d p1 = pixel2cam(keypoints_1[m.queryIdx].pt, K);
+            Point2d p1 = pixel2cam(keypoints_1[m.queryIdx].pt, K);  // 像素坐标转换为相机坐标系
             Point2d p2 = pixel2cam(keypoints_2[m.trainIdx].pt, K);
-            float dd1 = float(d1) / 5000.0;
+            float dd1 = float(d1) / 5000.0; // 缩放为米制单位
             float dd2 = float(d2) / 5000.0;
-            pts1.push_back(Point3f(p1.x * dd1, p1.y * dd1, dd1));
+            pts1.push_back(Point3f(p1.x * dd1, p1.y * dd1, dd1));   // 转化为3维坐标
             pts2.push_back(Point3f(p2.x * dd2, p2.y * dd2, dd2));
         }
 
@@ -195,23 +195,23 @@ private:
                               const vector<Point3f> &pts2,
                               Mat &R, Mat &t)
     {
-        Point3f p1, p2; // center of mass
+        Point3f p1, p2; // center of mass 质心初始化
         int N = pts1.size();
         for (int i = 0; i < N; i++)
         {
             p1 += pts1[i];
             p2 += pts2[i];
         }
-        p1 = Point3f(Vec3f(p1) / N);
-        p2 = Point3f(Vec3f(p2) / N);
-        vector<Point3f> q1(N), q2(N); // remove the center
+        p1 = Point3f(Vec3f(p1) / N);    // p1点集质心
+        p2 = Point3f(Vec3f(p2) / N);    // p2点集质心
+        vector<Point3f> q1(N), q2(N); // remove the center 每个点的去质心坐标
         for (int i = 0; i < N; i++)
         {
             q1[i] = pts1[i] - p1;
             q2[i] = pts2[i] - p2;
         }
 
-        // compute q1*q2^T
+        // compute q1*q2^T p196 7.57 计算W
         Eigen::Matrix3d W = Eigen::Matrix3d::Zero();
         for (int i = 0; i < N; i++)
         {
@@ -219,7 +219,7 @@ private:
         }
         cout << "W=" << W << endl;
 
-        // SVD on W
+        // SVD on W 特征值分解
         Eigen::JacobiSVD<Eigen::Matrix3d> svd(W, Eigen::ComputeFullU | Eigen::ComputeFullV);
         Eigen::Matrix3d U = svd.matrixU();
         Eigen::Matrix3d V = svd.matrixV();
@@ -227,12 +227,12 @@ private:
         cout << "U=" << U << endl;
         cout << "V=" << V << endl;
 
-        Eigen::Matrix3d R_ = U * (V.transpose());
+        Eigen::Matrix3d R_ = U * (V.transpose());   // 求旋转
         if (R_.determinant() < 0)
         {
             R_ = -R_;
         }
-        Eigen::Vector3d t_ = Eigen::Vector3d(p1.x, p1.y, p1.z) - R_ * Eigen::Vector3d(p2.x, p2.y, p2.z);
+        Eigen::Vector3d t_ = Eigen::Vector3d(p1.x, p1.y, p1.z) - R_ * Eigen::Vector3d(p2.x, p2.y, p2.z);  // 求平移 p198 7.54
 
         // convert to cv::Mat
         R = (Mat_<double>(3, 3) << R_(0, 0), R_(0, 1), R_(0, 2),
