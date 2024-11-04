@@ -22,12 +22,9 @@ find_package(Sophus REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${EIGEN3_INCLUDE_DIR})
-
-# set(g2o_path  ${PROJECT_SOURCE_DIR}/../../3rdparty/g2o)
-# message(WARNING "CMAKE_SOURCE_DIR: ${g2o_path}")
+include_directories("/usr/local/g2o_debug/include")
 
 
-# include_directories(${g2o_path}/include)
 
 add_compile_options(-msse4.2)
 
@@ -59,16 +56,22 @@ ament_target_dependencies(pose_estimation_2d2d OpenCV rclcpp cv_bridge)
 add_executable(triangulation src/triangulation.cpp)
 ament_target_dependencies(triangulation OpenCV rclcpp cv_bridge)
 
-# add_executable(pose_estimation_3d2d src/pose_estimation_3d2d.cpp)
-# ament_target_dependencies(pose_estimation_3d2d OpenCV rclcpp cv_bridge Eigen3)
 
-# # 链接OpenCV库
-# target_link_libraries(pose_estimation_3d2d ${OpenCV_LIBS}
-#     ${g2o_path}/lib/libg2o_core.so 
-#     ${g2o_path}/lib/libg2o_stuff.so)
+
+add_executable(pose_estimation_3d2d src/pose_estimation_3d2d.cpp)
+ament_target_dependencies(pose_estimation_3d2d OpenCV rclcpp cv_bridge Eigen3)
+
+target_link_libraries(pose_estimation_3d2d ${OpenCV_LIBS}
+  /usr/local/g2o_debug/lib/libg2o_core_d.so
+  /usr/local/g2o_debug/lib/libg2o_stuff_d.so)
+  
+set_target_properties(pose_estimation_3d2d PROPERTIES
+  BUILD_RPATH "/usr/local/g2o_debug/lib"
+  INSTALL_RPATH "/usr/local/g2o_debug/lib"
+)
 
 
 install(TARGETS
-  orb_cv orb_self pose_estimation_2d2d triangulation
+  orb_cv orb_self pose_estimation_2d2d triangulation pose_estimation_3d2d
   DESTINATION lib/${PROJECT_NAME}
 )

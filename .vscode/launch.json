@@ -18,8 +18,8 @@
       "request": "launch",
       "type": "cppdbg",
       "cwd": "${workspaceFolder}/",
-      // "args": ["./src/ch7/src/1.png","./src/ch7/src/2.png","./src/ch7/src/1_depth.png","./src/ch7/src/2_depth.png"],
-      "program": "${workspaceFolder}/install/ch6/lib/ch6/g2oCurveFitting",
+      "args": ["./src/ch7/src/1.png","./src/ch7/src/2.png","./src/ch7/src/1_depth.png","./src/ch7/src/2_depth.png"],
+      "program": "${workspaceFolder}/install/ch7/lib/ch7/pose_estimation_3d2d",
       "environment": [
         {
           "name": "LD_LIBRARY_PATH",

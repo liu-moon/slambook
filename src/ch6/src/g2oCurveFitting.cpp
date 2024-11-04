@@ -16,7 +16,7 @@
 using namespace std;
 
 // 曲线模型的顶点，模板参数：优化变量维度和数据类型
-class CurveFittingVertex : public g2o::BaseVertex<3, Eigen::Vector3d>
+class CurveFittingVertex : public g2o::BaseVertex<3, Eigen::Vector3d>// 3:顶点的维度 Eigen::Vector3d:顶点估计值类型
 {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -40,7 +40,7 @@ public:
 };
 
 // 误差模型 模板参数：观测值维度，类型，连接顶点类型
-class CurveFittingEdge : public g2o::BaseUnaryEdge<1, double, CurveFittingVertex>
+class CurveFittingEdge : public g2o::BaseUnaryEdge<1, double, CurveFittingVertex> // 1:误差维度 double:观测值的类型 CurveFittingVertex:与边相连接的顶点类型
 {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -50,9 +50,9 @@ public:
   // 计算曲线模型误差
   virtual void computeError() override
   {
-    const CurveFittingVertex *v = static_cast<const CurveFittingVertex *>(_vertices[0]);
-    const Eigen::Vector3d abc = v->estimate();
-    _error(0, 0) = _measurement - std::exp(abc(0, 0) * _x * _x + abc(1, 0) * _x + abc(2, 0));
+    const CurveFittingVertex *v = static_cast<const CurveFittingVertex *>(_vertices[0]); // _vertices[0] 是指向边的唯一顶点的指针
+    const Eigen::Vector3d abc = v->estimate();  // 获取该顶点的当前参数估计值
+    _error(0, 0) = _measurement - std::exp(abc(0, 0) * _x * _x + abc(1, 0) * _x + abc(2, 0)); // _measurement 是该边的观测值，即实际的数据点 y 值
   }
 
   // 计算雅可比矩阵
@@ -116,7 +116,7 @@ public:
     {
       CurveFittingEdge *edge = new CurveFittingEdge(x_data[i]);
       edge->setId(i);
-      edge->setVertex(0, v);                                                                   // 设置连接的顶点
+      edge->setVertex(0, v);                                                                   // 设置连接的顶点 0 表示边的第一个顶点 v 是优化过程中使用的曲线参数顶点
       edge->setMeasurement(y_data[i]);                                                         // 观测数值
       edge->setInformation(Eigen::Matrix<double, 1, 1>::Identity() * 1 / (w_sigma * w_sigma)); // 信息矩阵：协方差矩阵之逆
       optimizer.addEdge(edge);
@@ -126,7 +126,7 @@ public:
     cout << "start optimization" << endl;
     chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
     optimizer.initializeOptimization();
-    optimizer.optimize(10);
+    optimizer.optimize(10); // 最大迭代次数10 optimize中执行 computeError linearizeOplus oplusImpl
     chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
     chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
     cout << "solve time cost = " << time_used.count() << " seconds. " << endl;

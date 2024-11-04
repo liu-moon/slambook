@@ -22,6 +22,11 @@ using namespace cv;
 // BA by g2o
 typedef vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d>> VecVector2d;
 typedef vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> VecVector3d;
+void bundleAdjustmentG2O(
+    const VecVector3d &points_3d,
+    const VecVector2d &points_2d,
+    const Mat &K,
+    Sophus::SE3d &pose);
 
 class VertexPose : public g2o::BaseVertex<6, Sophus::SE3d>
 {
@@ -161,6 +166,14 @@ public:
         t2 = chrono::steady_clock::now();
         time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
         cout << "solve pnp by gauss newton cost time: " << time_used.count() << " seconds." << endl;
+
+        cout << "calling bundle adjustment by g2o" << endl;
+        Sophus::SE3d pose_g2o;
+        t1 = chrono::steady_clock::now();
+        bundleAdjustmentG2O(pts_3d_eigen, pts_2d_eigen, K, pose_g2o);
+        t2 = chrono::steady_clock::now();
+        time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+        cout << "solve pnp by g2o cost time: " << time_used.count() << " seconds." << endl;
     }
 
 private:
