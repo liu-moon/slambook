@@ -35,7 +35,10 @@ ament_package()
 add_executable(optical_flow src/optical_flow.cpp)
 ament_target_dependencies(optical_flow OpenCV rclcpp Eigen3)
 
+add_executable(direct_method src/direct_method.cpp)
+ament_target_dependencies(direct_method OpenCV rclcpp Eigen3)
+
 install(TARGETS
-  optical_flow
+  optical_flow direct_method
   DESTINATION lib/${PROJECT_NAME}
 )
