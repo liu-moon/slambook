@@ -20,7 +20,7 @@
       "cwd": "${workspaceFolder}/",
       // "args": ["./src/ch7/src/1.png","./src/ch7/src/2.png","./src/ch7/src/1_depth.png","./src/ch7/src/2_depth.png"],
       "args": ["./src/ch8/src/LK1.png","./src/ch8/src/LK2.png"],
-      "program": "${workspaceFolder}/install/ch8/lib/ch8/optical_flow",
+      "program": "${workspaceFolder}/install/ch8/lib/ch8/direct_method",
       "environment": [
         {
           "name": "LD_LIBRARY_PATH",
